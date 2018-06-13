@@ -1,0 +1,91 @@
+﻿/*分页*/
+#pager {
+    text-align: center;
+}
+
+.dataPager {
+    text-align: center;
+    margin: 10px;
+}
+
+    .dataPager a {
+        border: 1px solid #e8e8e8;
+        padding: 5px 10px 5px 10px;
+        color: #898989;
+        cursor: pointer
+    }
+
+        .dataPager a:hover {
+            color: #0093dd;
+            background: #f8f8f8
+        }
+
+        .dataPager a[disabled] {
+            color: #0093dd;
+            background: #f8f8f8
+        }
+
+        .dataPager a.next {
+            -ms-border-radius: 0 3px 3px 0;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .dataPager a.prev {
+            -ms-border-radius: 0 3px 3px 0;
+            border-radius: 3px 0 0 3px;
+            border-left: 1px solid #e8e8e8
+        }
+
+
+/*列表*/
+.column {
+    padding-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    *zoom: 1;
+}
+
+.table table {
+    width: 100%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857;
+    color: rgb(51, 51, 51);
+}
+
+.table th, .table td {
+    padding: 1px 4px;
+}
+
+.table td {
+    -moz-word-break: break-all;
+    -o-word-break: break-all;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.table table th,
+.table table td {
+    text-align: center;
+    border: 1px solid rgb(231, 231, 231);
+    background-color: #ececec;
+}
+
+.table table th {
+    background-color: #F5F5F5;
+    line-height: 40px;
+}
+
+.table table td {
+    background-color: #fff;
+    line-height: 30px;
+}
+
+.table table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+a {
+    text-decoration: none;
+}
