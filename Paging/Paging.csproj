@@ -65,6 +65,7 @@
     <Content Include="html\net.html" />
     <Content Include="html\newVue.html" />
     <Content Include="html\vue.html" />
+    <Content Include="html\vueComponent.html" />
     <Content Include="js\jquery-1.7.2.min.js" />
     <Content Include="js\jquerytemplate.js" />
     <Content Include="js\vue.min.js" />

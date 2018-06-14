@@ -14,11 +14,7 @@ namespace Paging.ajax
         public object Paging(Pagination pagination)
         {
             //分页为测试数据 数据库分页自行实现
-            var list = new List<Model>();
-            for (int i = 0; i < 100; i++)
-            {
-                list.Add(new Model { Id = i, Name = "name" + i, Age = i, Address = "address" + i, Mobile = "1355115457", Height = i, Weight = i, Remark ="格斯达克沙地上多空双方的伤口附近的客服电话开机"});
-            }
+            var list = QueryData();
             var startRow = (pagination.PageIndex - 1) * pagination.PageSize;
             var endRow = pagination.PageIndex * pagination.PageSize;
             pagination.RowCount = list.Count;
@@ -27,6 +23,17 @@ namespace Paging.ajax
                 Data = list.Take(endRow).Skip(startRow),
                 Pagination = pagination
             };
+        }
+
+        private static List<Model> QueryData()
+        {
+            var list = new List<Model>();
+            for (int i = 0; i < 100; i++)
+            {
+                list.Add(new Model { Id = i, Name = "name" + i, Age = i, Address = "address" + i, Mobile = "1355115457", Height = i, Weight = i, Remark = "格斯达克沙地上多空双方的伤口附近的客服电话开机" });
+            }
+
+            return list;
         }
     }
     /// <summary>

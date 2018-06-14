@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>.net ajax 分页</title>
+    <link href="../css/style.css" rel="stylesheet" />
+    <script src="../js/jquery-1.7.2.min.js"></script>
+    <script src="../js/vue.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="table column">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>名字</th>
+                        <th>年龄</th>
+                        <th>地址</th>
+                        <th>手机</th>
+                        <th>身高</th>
+                        <th>体重</th>
+                        <th>备注</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in sites">
+                        <td>{{item.Id}}</td>
+                        <td>{{item.Name}}</td>
+                        <td>{{item.Age}}</td>
+                        <td>{{item.Address}}</td>
+                        <td>{{item.Mobile}}</td>
+                        <td>{{item.Height}}</td>
+                        <td>{{item.Weight}}</td>
+                        <td>{{item.Remark}}</td>
+                        <td>
+                            <a href='javascript:operation(${Id});'>操作</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-show="dataCount > 0">
+            <div class="dataPager">
+                <template v-show="pageIndex > 1">
+                    <a v-on:click="goPage(1)">首页</a>
+                    <a v-on:click="goPage(pageIndex - 1)">上一页</a>
+                </template>
+                <span>
+                    <template v-for="item in pageSizeArray">
+                        <a v-if="item.isFirst == true" id="pager_lbPage{{item.value}}" disabled="disabled" class="yemaa" style="margin-left: 5px; margin-right: 5px; text-decoration: none;">{{item.value}}</a>
+                        <a v-else="item.isFirst == false" v-on:click="goPage(item.value)" style="margin-left: 5px; margin-right: 5px; text-decoration: none;">{{item.value}}</a>
+                    </template>
+                </span>
+                <span v-show="pageIndex < pageCount">
+                    <a v-on:click="goPage(pageIndex + 1)">下一页</a>
+                    <a v-on:click="goPage(pageCount)">末页</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            pageSize: 10,  //页码
+            pageIndex: 1, //当前页
+            dataCount: 0,//总条数
+            sites: [],      //数据
+            pageCount: 0   //总页数
+        },
+        computed: {
+            // 分页数据
+            pageSizeArray: function () {
+                var array = new Array();
+                var index = this.pageIndex;
+                var size = this.pageSize;
+                for (var i = index - 4; i <= index + 4; i++) {
+                    if (i === index) {
+                        array.push({ isFirst: true, value: i });
+                    } else if (i > 0 && i <= size) {
+                        array.push({ isFirst: false, value: i });
+                    }
+                }
+                return array;
+            }
+        },
+        // 数据初次加载
+        mounted: function () {
+            this.queryPaging(1, this.pageSize);
+        },
+        methods: {
+            // 分页事件
+            goPage: function (pageIndex) {
+                this.queryPaging(pageIndex, this.pageSize);
+            },
+            // 分页查询调侃
+            getQueryPagination: function (pageIndex, pageSize) {
+                return { "PageSize": pageSize, "PageIndex": pageIndex, "GetRowCount": true };
+            },
+            // 分页数据绑定
+            bindData: function (self, data) {
+                var d = data.Data;
+                self.pageSize = data.Pagination.PageSize;
+                self.pageIndex = data.Pagination.PageIndex;
+                self.dataCount = data.Pagination.RowCount;
+                self.pageCount = parseInt((self.dataCount + self.pageSize - 1) / self.pageSize);
+                for (var i = 0; i < d.length; i++) {
+                    self.$set(vm.sites, i, d[i]);
+                }
+            },
+            // 分页ajax
+            queryPaging: function (pageIndex, pageSize) {
+                var self = this;
+                if (!pageIndex) {
+                    pageIndex = 1;
+                }
+                pageSize = pageSize || 10;
+                var pagination = this.getQueryPagination(pageIndex, pageSize);
+                var parameters = JSON.stringify({ "pagination": pagination });
+                $.ajax({
+                    type: "POST",
+                    url: "/ajax/PagingHandler.ashx/Paging",
+                    data: parameters,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: true,
+                    success: function (d) {
+                        self.bindData(self, d);
+                    },
+                    timeout: 30000,
+                    error: function (e) {
+                        if (e.responseText === "") return;
+                        if (e.status === 300) {
+                            if (JSON.parse(e.responseText) === "RequireLogon") {
+                                return;
+                            } else if (JSON.parse(e.responseText) === "Unauthorized") {
+                                return;
+                            }
+                        } else if (e.status === 401 && e.statusText === "Unauthorized") {
+                            return;
+                        }
+                        if (e.statusText === "timeout") {
+                            alert("服务器忙");
+                        } else if (e) {
+                            alert(e.responseText);
+                        }
+                    }
+                });
+            }
+        }
+    });
+</script>
