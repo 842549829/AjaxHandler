@@ -1,0 +1,146 @@
+<!doctype html>
+    <head>
+    	<title>vue组件demo</title>
+        <meta http-equiv="Content-Type" content="text/html"; charset="utf-8">
+    	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+        <style type="text/css">
+            * {margin:0; padding:0;}
+            input{
+                width:265px;
+                height:28px;
+                border-radius:5px;
+                border:1px solid #ccc;
+                background-color:transparent;
+            }
+            input:focus{
+                border-color: #66AFE !important;
+                outline: 0;
+                -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,0.6);
+                -moz-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,0.6);
+                box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,0.6);
+            }
+            /*向下*/
+            .triangle_border_down{
+                border:#ccc solid 1px;
+                border-radius: 5px;
+                width:30px;
+                height:30px;
+                display:inline-block;
+                vertical-align: top;
+                position:relative;
+                cursor:pointer;
+
+            }
+            .triangle_border_down:hover{
+                background-color: #ccc;
+            }
+            .triangle_border_down .down{
+                width:0;
+                height:0;
+                border-width:10px 10px 0;
+                border-style:solid;
+                border-color:#333 transparent transparent;/*灰 透明 透明 */
+                position:absolute;
+                top:12px;
+                left:5px;
+            }
+            .triangle_border_down .up{
+                width:0;
+                height:0;
+                border-width:0px 10px 10px;
+                border-style:solid;
+                border-color:transparent transparent #333;/*灰 透明 透明 */
+                position:absolute;
+                top:8px;
+                left:5px;
+            }
+            .panel{
+                width: 245px;
+                border-radius:5px;
+                border:1px solid #ccc;
+                padding:10px;
+            }
+            li{
+                list-style-type:none;
+                cursor:pointer;
+            }
+            li:hover{
+                background-color: #ccc;
+            }
+            #main{
+                position:relative;
+                width:100%;
+                height:500px;
+            }
+            .center{
+                position:absolute;
+                top:30%;
+                left:35%;
+            }
+        </style>
+    </head>
+    <body>
+    	<div id="main">
+    	   <father-component class="center" v-bind:list="city">
+               <p>使用插槽</p>   
+           </father-component>
+    	</div>
+    </body>
+    <script type="text/javascript">
+        var Father = {
+            props:['list'],
+            data:function(){
+                return {
+                    value:"",
+                    isShow:false,
+                    spanDownShow:true,
+                    spanUpShow:false
+                }
+            },
+            template:'<div class="fatherCom"><slot>没有内容哦</slot><div><input type="text" v-model="value" /><div class="triangle_border_down" v-on:click="showPanel"><span class="up" v-show="spanUpShow"></span><span class="down" v-show="spanDownShow"></span></div></div><child-component v-bind:list="list" v-on:tempFun="fatherFun" v-show="isShow"></child-component></div>',
+            components:{
+                'child-component': {
+                    props:['list'],
+                    template:'<div class="panel"><ul><li v-for="item in list" v-on:click="childFun(item)" v-bind:value="list.item">{{item}}</li></ul></div>',
+                    methods:{
+                        childFun:function(value){
+                            this.$emit('tempFun',value);
+                        }
+                    }
+                }
+            },
+            methods:{
+                fatherFun:function(item){
+                    this.value = item;
+                },
+                showPanel:function(){
+                    this.isShow = !this.isShow;
+                    this.spanDownShow = !this.spanDownShow;
+                    this.spanUpShow = !this.spanUpShow;
+                }
+            },
+            watch:{
+                value:function(newValue,oldValue){
+                    if(newValue === ""){
+                        this.isShow = false;
+                        this.spanDownShow = true;
+                        this.spanUpShow = false;
+                    }else{
+                        this.isShow = true;
+                        this.spanDownShow = false;
+                        this.spanUpShow = true;
+                    }
+                }
+            }
+        }
+        var vm = new Vue({
+            el: '#main',
+            components: {
+                'father-component': Father
+            },
+            data:{
+                city:["北京","上海","杭州","广州"]
+            }
+        })
+    </script>
+</html>

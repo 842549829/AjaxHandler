@@ -41,30 +41,56 @@
                 </tbody>
             </table>
         </div>
-        <div v-show="dataCount > 0">
-            <div class="dataPager">
-                <template v-show="pageIndex > 1">
-                    <a v-on:click="goPage(1)">首页</a>
-                    <a v-on:click="goPage(pageIndex - 1)">上一页</a>
-                </template>
-                <span>
-                    <template v-for="item in pageSizeArray">
-                        <a v-if="item.isFirst == true" id="pager_lbPage{{item.value}}" disabled="disabled" class="yemaa" style="margin-left: 5px; margin-right: 5px; text-decoration: none;">{{item.value}}</a>
-                        <a v-else="item.isFirst == false" v-on:click="goPage(item.value)" style="margin-left: 5px; margin-right: 5px; text-decoration: none;">{{item.value}}</a>
-                    </template>
-                </span>
-                <span v-show="pageIndex < pageCount">
-                    <a v-on:click="goPage(pageIndex + 1)">下一页</a>
-                    <a v-on:click="goPage(pageCount)">末页</a>
-                </span>
-            </div>
-        </div>
+        <parent v-bind:array="pageSizeArray" v-bind:size="pageSize" v-bind:count="dataCount" v-bind:index="pageIndex" v-bind:pagecount="pageCount" v-bind:sites="sites"></parent>
     </div>
 </body>
 </html>
 <script>
+    // 定义组件
+    Vue.component("parent", {
+        props: ['array', 'size', 'count', 'index', 'pagecount', 'sites'],
+        template:
+            '<div class="dataPager" v-if="count > 0">' +
+            '<template v-if="index > 1">' +
+            '<a v-on:click="fatherFun(1)">首页</a>' +
+            '<a v-on:click="fatherFun(index - 1)">上一页</a>' +
+            '</template>' +
+            '<child v-bind:array="array" v-bind:size="size" v-on:tempFun="fatherFun"></child>' +
+            '<span v-if="index < pagecount">' +
+            '<a v-on:click="fatherFun(index + 1)">下一页</a>' +
+            '<a v-on:click="fatherFun(pagecount)">末页</a>' +
+            '<span>' +
+            '</div>',
+        components: {
+            'child': {
+                props: ['array', 'size'],
+                template:
+                    '<span>' +
+                    '<template v-for="item in array">' +
+                    '<a v-if="item.isFirst == true" disabled="disabled" class="number">{{item.value}}</a>' +
+                    '<a v-else="item.isFirst == false" v-on:click="childFun(item.value)" class="number">{{item.value}}</a>' +
+                    '</template>' +
+                    '</span>',
+                methods: {
+                    childFun: function (value) {
+                        this.$emit('tempFun', value);
+                    }
+                }
+            }
+
+        },
+        methods: {
+            fatherFun: function (item) {
+                if (vm.goPage) {
+                    vm.goPage(item);
+                }
+            }
+        }
+    });
+
+    // 使用vue加载数据
     var vm = new Vue({
-        el: '#app',
+        el: "#app",
         data: {
             pageSize: 10,  //页码
             pageIndex: 1, //当前页
@@ -88,7 +114,6 @@
                 return array;
             }
         },
-        // 数据初次加载
         mounted: function () {
             this.queryPaging(1, this.pageSize);
         },

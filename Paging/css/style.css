@@ -25,17 +25,10 @@
             background: #f8f8f8
         }
 
-        .dataPager a.next {
-            -ms-border-radius: 0 3px 3px 0;
-            border-radius: 0 3px 3px 0;
+        .dataPager a {
+            margin-left: 5px; margin-right: 5px; text-decoration: none;
         }
-
-        .dataPager a.prev {
-            -ms-border-radius: 0 3px 3px 0;
-            border-radius: 3px 0 0 3px;
-            border-left: 1px solid #e8e8e8
-        }
-
+        
 
 /*列表*/
 .column {
@@ -89,3 +82,4 @@
 a {
     text-decoration: none;
 }
+

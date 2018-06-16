@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\style.css" />
+    <Content Include="html\demo.html" />
     <Content Include="html\js.html" />
     <Content Include="html\jquery.html" />
     <Content Include="html\net.html" />
