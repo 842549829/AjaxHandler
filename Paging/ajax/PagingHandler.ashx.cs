@@ -30,10 +30,41 @@ namespace Paging.ajax
             var list = new List<Model>();
             for (int i = 0; i < 100; i++)
             {
-                list.Add(new Model { Id = i, Name = "name" + i, Age = i, Address = "address" + i, Mobile = "1355115457", Height = i, Weight = i, Remark = "格斯达克沙地上多空双方的伤口附近的客服电话开机" });
+                list.Add(new Model { Id = i, Name = "name" + i, Age = i, Address = "address" + i, Mobile = "1355115457" + i, Height = i, Weight = i, Remark = "格斯达克沙地上多空双方的伤口附近的客服电话开机" });
             }
 
             return list;
+        }
+
+        public object QueryData(QueryCondition condition)
+        {
+            //分页为测试数据 数据库分页自行实现
+            Pagination pagination = condition.Pagination;
+            Model model = condition.Model;
+            var list = QueryData();
+            if (model != null)
+            {
+                if (!string.IsNullOrWhiteSpace(model.Address))
+                {
+                    list = list.Where(item => item.Address == model.Address).ToList();
+                }
+                if (!string.IsNullOrWhiteSpace(model.Name))
+                {
+                    list = list.Where(item => item.Name == model.Name).ToList();
+                }
+                if (!string.IsNullOrWhiteSpace(model.Mobile))
+                {
+                    list = list.Where(item => item.Mobile == model.Mobile).ToList();
+                }
+            }
+            var startRow = (pagination.PageIndex - 1) * pagination.PageSize;
+            var endRow = pagination.PageIndex * pagination.PageSize;
+            pagination.RowCount = list.Count;
+            return new
+            {
+                Data = list.Take(endRow).Skip(startRow),
+                Pagination = pagination
+            };
         }
     }
     /// <summary>
@@ -136,5 +167,21 @@ namespace Paging.ajax
                 return new Pagination(1, 10, true);
             }
         }
+    }
+
+    /// <summary>
+    /// 查询条件
+    /// </summary>
+    public class QueryCondition
+    {
+        /// <summary>
+        /// 分页信息
+        /// </summary>
+        public Pagination Pagination { get; set; }
+
+        /// <summary>
+        /// 查询条件
+        /// </summary>
+        public Model Model { get; set; }
     }
 }
