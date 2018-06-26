@@ -10,8 +10,9 @@
     <script src="../ajax/PagingHandler.ashx"></script>
     <style type="text/css">
         body {
-            padding-top:60px;
+            padding-top: 60px;
         }
+
         #content {
             margin: 5px;
             border: solid 2px #F8F8F8;
@@ -30,6 +31,27 @@
             margin: 20px;
             vertical-align: middle;
         }
+
+        .navbar-inverse form input[type="text"] {
+            background: #333;
+            border: none;
+            color: #999;
+        }
+
+        .navbar-inverse form button[type="submit"] {
+            background: none;
+            border: none;
+            color: #999;
+        }
+
+        .navbar-inverse form {
+            position: relative;
+        }
+            .navbar-inverse form .glyphicon-search {
+                position: absolute;
+                top:27%;
+                right:40px;
+            }
     </style>
 </head>
 <body>
@@ -42,6 +64,20 @@
                 </li>
                 <!--<li><a href="#">Java</a></li>-->
             </ul>
+            <form action="#" class="navbar-form navbar-left">
+                <input type="text" class="form-control" placeholder="请输入搜索内容" />
+                <button type="submit">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </form>
+            <div class="navbar-right">
+                <ul class="nav navbar-nav">
+                    <li><a>注册</a></li>
+                    <li><a>登录</a></li>
+                </ul>
+                <p class="navbar-text">您好:<a href="#" class="navbar-link">喳喳</a></p>
+            </div>
+            <!--<a href="#" class="btn navbar-btn btn-primary btn-sm navbar-right">登录</a>-->
         </div>
     </nav>
     <div id="content" class="container-fluid">
