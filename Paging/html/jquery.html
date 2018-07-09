@@ -18,10 +18,10 @@
             <td>${Weight}</td>
             <td>${Remark}</td>
             <td>
-                <a href='javascript:operation(${Id});'>操作</a>
+                <a href="javascript:void(0)" onclick="getrows(this)">操作</a>
             </td>
-    </tr>
-</script>
+        </tr>
+    </script>
 </head>
 <body>
     <div id="content" class="table column">
@@ -154,4 +154,9 @@
     window.onload = function () {
         queryOrders(1, 10);
     };
+
+    function getrows(curr) {
+        var indexval = $("table tr").index($(curr).parents("tr"));
+        alert(indexval);
+    }
 </script>
